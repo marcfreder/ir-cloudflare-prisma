@@ -7,15 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Log {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  level   Level
-  message String
-  meta    Json
+model Pricing {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  meta  Meta
+  limit Int
 }
 
-enum Level {
-  Info
-  Warn
-  Error
+type Meta {
+  reference    String @default(uuid())
+  name         String
+  quantity     Int
+  unit_price   Int
+  total_amount Int
+  tax_rate     Int
 }
