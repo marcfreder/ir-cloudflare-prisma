@@ -11,6 +11,7 @@ model Pricing {
   id    String @id @default(auto()) @map("_id") @db.ObjectId
   meta  Meta
   limit Int
+  type  String
 }
 
 type Meta {
@@ -20,4 +21,40 @@ type Meta {
   unit_price   Int
   total_amount Int
   tax_rate     Int
+}
+
+model Cart {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  items     String[]
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
+
+model Schedule {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  reference String   @default(uuid())
+  title     String
+  endsAt    DateTime
+  city      String
+}
+
+model Course {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  scheduleRef String   @default(uuid())
+  indexOfWeek Int
+  styles      String[]
+  cotegories  String[]
+  type        String
+}
+
+model AllowList {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  whitelistedIps String[]
+}
+
+model Instructor {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  firstName String
+  lastName  String
+  subInfo   String
 }

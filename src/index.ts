@@ -1,32 +1,26 @@
-import prisma from './utils/prisma.client'
-import { error, json, Router, withParams, withContent } from 'itty-router'
-import { z } from 'zod'
-
-const TypeGuard = z.object({
-  email: z.string().email()
-})
-
-export interface Env {
-  DATABASE_URL: string
-  AUTH: String
-}
+import { error, json, Router } from 'itty-router'
+import pricingRouter from './handlers/pricing.handler'
 
 const router = Router()
 
+export interface Env {
+  AUTH: String
+  ENVIRONMENT: String
+}
+
+const withAllowList = (request: Request, env: Env) => {
+  const allowList = [
+    '185.205.225.41'
+  ] /* Should be replace with Prisma Allowed IPs Look Up */
+  const clientIp = request.headers.get('CF-Connecting-IP')
+
+  if (!allowList.includes(clientIp as string) && env.ENVIRONMENT != 'local')
+    return error(403)
+}
+
 router
-  .get('/', async () => {
-    const data = await prisma.log.findMany()
-
-    return data
-  })
-  .get('/hello/:name', withParams, (request) => {
-    return { data: request.name }
-  })
-  .post('/test', withContent, async ({ content }) => {
-    const status = TypeGuard.safeParse(content)
-
-    return status
-  })
+  .all('*', withAllowList)
+  .all('*', pricingRouter.handle)
   .all('*', () => error(404))
 
 export default {

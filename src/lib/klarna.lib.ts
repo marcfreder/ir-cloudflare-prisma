@@ -7,7 +7,10 @@ interface OrderLine {
   tax_rate: number
 }
 
-async function initiatePayment(orderLine: OrderLine, basicAuth: String) {}
+async function initiatePayment(orderLine: OrderLine, basicAuth: String) {
+  /* Initiate the Klarna Session */
+  return { orderLine, basicAuth }
+}
 
 const Klarna = {
   initiatePayment

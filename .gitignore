@@ -5,6 +5,7 @@
 # Varibles and Wranger config file
 .env
 wrangler.toml
+txt.txt
 
 # Logs
 logs
